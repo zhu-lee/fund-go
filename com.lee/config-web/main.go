@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"com.lee/config-web/controller"
+	"com.lee/fund/web"
 )
 
 func main() {
-	fmt.Println("1------------")
-
-
+	app := web.NewDefaultApp()
+	app.RegisterController("/team",&controller.DevTeamController{})
+	app.Start()
 }

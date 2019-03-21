@@ -9,12 +9,12 @@ import (
 )
 
 type appConfig struct {
-	WebSetting *webSetting
-	AppSetting *appSetting
+	WebSetting *WebSetting
+	AppSetting *AppSetting
 	Custom     SettingMap
 }
 
-type webSetting struct {
+type WebSetting struct {
 	HttpAddr     string
 	HttpPort     int
 	LogEnable    bool
@@ -28,7 +28,7 @@ type webSetting struct {
 	UrlNoRight   string
 }
 
-type appSetting struct {
+type AppSetting struct {
 	AppName   string
 	Debug     bool
 	LogLevel  int
