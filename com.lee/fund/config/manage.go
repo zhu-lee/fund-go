@@ -29,13 +29,15 @@ func (m *manage) init() {
 }
 
 func (m *manage) loadAppConfig() {
-	path := FindConfigPath("app",".conf","xml")
+	path := FindConfigPath("app.conf")
 	if path == "" {
 		m.app.init()
 		return
 	}
 
-	doc, err := m.
-
-
+	doc, err := loadXML(path)
+	err = m.app.load(doc)
+	if err != nil {
+		panic(err)
+	}
 }
