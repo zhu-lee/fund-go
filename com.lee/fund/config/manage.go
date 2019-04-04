@@ -1,6 +1,10 @@
 package config
 
-import "sync"
+import (
+	"com.lee/fund/log"
+	"path/filepath"
+	"sync"
+)
 
 const (
 	ACTIVE_PROFILE_ENV = "FUND-PROFILE-ACTIVE"
@@ -10,12 +14,12 @@ var mg = newManage()
 
 type manage struct {
 	once sync.Once
-	app *appConfig
+	app  *appConfig
 }
 
 func newManage() *manage {
 	return &manage{
-		app:new(appConfig),
+		app: new(appConfig),
 	}
 }
 
@@ -29,8 +33,9 @@ func (m *manage) init() {
 }
 
 func (m *manage) loadAppConfig() {
-	path := FindConfigPath("app.conf")
+	path := filepath.Join(FindConfigPath(), "app.conf")
 	if path == "" {
+		log.Log().Info("can't find app.conf")
 		m.app.init()
 		return
 	}
@@ -40,4 +45,5 @@ func (m *manage) loadAppConfig() {
 	if err != nil {
 		panic(err)
 	}
+	log.Log().Info("load app.conf：%s",path)
 }

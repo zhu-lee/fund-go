@@ -1,6 +1,7 @@
 package config
 
 import (
+	"com.lee/fund/log"
 	x "com.lee/fund/xml"
 	"errors"
 	"io/ioutil"
@@ -13,14 +14,17 @@ import (
 
 var ConfDir string
 
-func FindConfigPath(fileName string) string {
-	p, err := getCurrentPath()
-	if err != nil {
-		return ""
-	}
-	p = filepath.Join(p, fileName)
-	if _, err := os.Stat(p); err == nil {
-		return p
+func FindConfigPath() string {
+	if ConfDir == "" {
+		folder, err := getCurrentPath()
+		if err != nil {
+			panic(err)
+		}
+		ConfDir = filepath.Join(folder, "config")
+		if _, err := os.Stat(ConfDir); err == nil {
+			log.Log().Info("find config folder：%s",ConfDir)
+			return ConfDir
+		}
 	}
 	return ""
 }
@@ -43,17 +47,6 @@ func getCurrentPath() (string, error) {
 		return "", errors.New("no executable file path found")
 	}
 	return string(path[0 : i+1]), nil
-}
-
-func getConfigDir() string {
-	if ConfDir == "" {
-		folder, err := getCurrentPath()
-		if err != nil {
-			panic(err)
-		}
-		ConfDir = filepath.Join(folder, "config")
-	}
-	return ConfDir
 }
 
 func loadXML(filePath string) (*x.Document, error) {

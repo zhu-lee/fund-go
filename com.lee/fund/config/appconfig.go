@@ -63,8 +63,8 @@ func (c *appConfig) load(doc *xml.Document) error {
 	return nil
 }
 
-func newAppSetting(m SettingMap) *appSetting {
-	s := &appSetting{}
+func newAppSetting(m SettingMap) *AppSetting {
+	s := &AppSetting{}
 	if m != nil {
 		s.AppName = m.String("app_name", "")
 		s.Debug = m.Bool("debug", false)
@@ -77,8 +77,8 @@ func newAppSetting(m SettingMap) *appSetting {
 	return s
 }
 
-func newWebSetting(settings SettingMap) *webSetting {
-	w := &webSetting{}
+func newWebSetting(settings SettingMap) *WebSetting {
+	w := &WebSetting{}
 	if settings != nil {
 		w.HttpAddr = settings.String("http_addr", "")
 		w.HttpPort = settings.Int("http_port", 80)
