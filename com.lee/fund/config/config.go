@@ -1,9 +1,9 @@
 package config
 
 import (
-	"com.lee/fund/log"
 	x "com.lee/fund/xml"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -22,7 +22,7 @@ func FindConfigPath() string {
 		}
 		ConfDir = filepath.Join(folder, "config")
 		if _, err := os.Stat(ConfDir); err == nil {
-			log.Log().Info("find config folder：%s",ConfDir)
+			fmt.Printf("find config folder：%s\n", ConfDir)
 			return ConfDir
 		}
 	}

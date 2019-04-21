@@ -1,16 +1,22 @@
 package web
 
-import "com.lee/fund/config"
+import (
+	"com.lee/fund/config"
+)
 
 type Config struct {
-	HttpAddr   string
-	HttpPort   int
-	ViewFolder string // 视图文件目录
+	AppName  string
+	Version  string
+	HttpAddr string
+	HttpPort int
 }
 
-func NewConfig(w *config.WebSetting) *Config {
-	return &Config{
-		HttpAddr: w.HttpAddr,
-		HttpPort: w.HttpPort,
+func NewConfig(settings config.SettingMap) *Config {
+	cfg := &Config{
+		AppName:  config.GetAppConf().App.AppName,
+		Version:  config.GetAppConf().App.Version,
+		HttpAddr: settings.String("http_addr", ""),
+		HttpPort: settings.Int("http_port", 80),
 	}
+	return cfg
 }
