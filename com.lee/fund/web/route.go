@@ -67,3 +67,11 @@ func (r *routeEngine) registerRoute(rt routeType, name, url string, h handler, o
 		}
 	r.routes[url]= routeItem
 }
+
+func (r *routeEngine) GetRoute(urlPath string) *RouteItem {
+	urlPath = strings.ToLower(urlPath)
+	if r, ok := r.routes[urlPath]; ok {
+		return r
+	}
+	return nil
+}

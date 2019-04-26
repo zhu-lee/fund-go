@@ -5,18 +5,30 @@ import (
 	"com.lee/fund/log"
 	"fmt"
 	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+const (
+	F_NONE = iota
+	F_DIR
+	F_FILE
 )
 
 type App struct {
-	Config *Config
-	route  *routeEngine
+	Config     *Config
+	route      *routeEngine
+	errHandler ErrorHandler
 }
 
 func NewWebApp() *App {
 	web := config.GetAppConf().Web
 	return &App{
-		route:  newRoute(),
-		Config: NewConfig(web),
+		route:      newRoute(),
+		Config:     NewConfig(web),
+		errHandler: errHandler,
 	}
 }
 
@@ -42,6 +54,68 @@ func (a *App) Start() {
 	log.Log.Info("web server [%s] terminated", a.Config.AppName)
 }
 
-func (a *App) ServeHTTP(rpw http.ResponseWriter, req *http.Request) {
-	fmt.Println("1=========")
+func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var (
+		reqUrl *url.URL
+	)
+
+	defer func() {
+		//捕获异常 panic用于抛出异常, recover用于捕获异常
+		if err := recover(); err != nil {
+			a.errHandler(err, w, r)
+		}
+
+		//TODO 如果成功，输出web访问日志到指路径的日志文件
+	}()
+
+	//如是是首页，路由到哪儿
+	if r.URL.Path == "/" {
+		r.URL.Path = "/index"
+	}
+	reqUrl = r.URL
+
+	route := a.route.GetRoute(reqUrl.Path)
+	//如果静态页，路由到哪儿
+	if route == nil {
+		a.handleStatic(w, r, reqUrl)
+	} else {
+		ctx := a.newContext(w, r, reqUrl)
+		a.handleRoute(ctx, w, r, route)
+	}
+}
+
+func (a *App) handleStatic(w http.ResponseWriter, r *http.Request, url *url.URL) {
+	//禁止包令相对路径
+	if strings.Contains(url.Path, "/../") {
+		http.Error(w, "禁止包令相对路径："+url.Path, http.StatusForbidden)
+		return
+	}
+
+	//检查合法性
+	filePath := filepath.Join(a.Config.StaticFolder, url.Path)
+	f := getFileType(filePath)
+	if f == F_NONE {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	} else if f == F_DIR {
+		filePath = filepath.Join(filePath, "index.html")
+		f = getFileType(filePath)
+		if f == F_NONE {
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+			return
+		}
+	}
+
+	http.ServeFile(w, r, filePath)
+}
+
+func getFileType(filepath string) int32 {
+	f, err := os.Stat(filepath)
+	if err != nil {
+		return F_NONE
+	} else if f.IsDir() {
+		return F_DIR
+	} else {
+		return F_FILE
+	}
 }

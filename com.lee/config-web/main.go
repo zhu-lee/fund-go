@@ -8,5 +8,6 @@ import (
 func main() {
 	app := web.NewWebApp()
 	app.RegisterController("/team", &controller.DevTeamController{})
+	app.RegisterController("/", &controller.DefaultController{})
 	app.Start()
 }

@@ -7,14 +7,14 @@ import (
 )
 
 var logLevelMap = map[string]int{
-	"emergency": logs.LevelEmergency,
-	"alert":     logs.LevelAlert,
-	"critical":  logs.LevelCritical,
-	"error":     logs.LevelError,
-	"warning":   logs.LevelWarning,
-	"notice":    logs.LevelNotice,
-	"info":      logs.LevelInfo,
-	"debug":     logs.LevelDebug,
+	"emergency": logs.LevelEmergency, //紧急级别
+	"alert":     logs.LevelAlert,     //报警级别
+	"critical":  logs.LevelCritical,  //严重错误级别
+	"error":     logs.LevelError,     //错误级别
+	"warning":   logs.LevelWarning,   //警告级别
+	"notice":    logs.LevelNotice,    //注意级别
+	"info":      logs.LevelInfo,      //报告级别
+	"debug":     logs.LevelDebug,     //出错级别
 }
 
 var Log *logs.BeeLogger
