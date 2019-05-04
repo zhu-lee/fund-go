@@ -24,10 +24,10 @@ type App struct {
 }
 
 func NewWebApp() *App {
-	web := config.GetAppConf().Web
+	webSetting := config.GetAppConf().Web
 	return &App{
 		route:      newRoute(),
-		Config:     NewConfig(web),
+		Config:     NewConfig(webSetting),
 		errHandler: errHandler,
 	}
 }
@@ -118,4 +118,21 @@ func getFileType(filepath string) int32 {
 	} else {
 		return F_FILE
 	}
+}
+
+func (a *App) newContext(w http.ResponseWriter, r *http.Request, url *url.URL) *Context {
+	return &Context{
+		App:      a,
+		Request:  r,
+		Response: w,
+		Url:      url,
+	}
+}
+
+func (a *App) handleRoute(ctx *Context, w http.ResponseWriter, r *http.Request, route *RouteItem) {
+	//TODO 设置权限
+
+	//TODO 过滤请求
+
+	route.handler.Process(ctx)
 }

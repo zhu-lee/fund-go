@@ -1,10 +1,14 @@
 package web
 
-import "net/http"
+import (
+	"net/http"
+	"net/url"
+)
 
 type Context struct {
-	RawRequest  *http.Request
-	RawResponse http.ResponseWriter
-	App         *App
-	data        map[interface{}]interface{}
+	Request  *http.Request
+	Response http.ResponseWriter
+	Url      *url.URL
+	App      *App
+	data     map[interface{}]interface{}
 }

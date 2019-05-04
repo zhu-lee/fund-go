@@ -1,11 +1,15 @@
 package controller
 
-import "fmt"
+import (
+	"com.lee/fund/web"
+	"fmt"
+)
 
 type DefaultController struct {
+	prefix string "aa"
 }
 
-func (c *DefaultController) Index () {
+func (c *DefaultController) Index (ctx *web.Context) {
 	fmt.Println("DefaultController-Index")
+	ctx.Response.Write([]byte("hello,index！"))
 }
-

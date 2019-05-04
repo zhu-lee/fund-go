@@ -16,7 +16,7 @@ var ConfDir string
 
 func FindConfigPath() string {
 	if ConfDir == "" {
-		folder, err := getCurrentPath()
+		folder, err := GetAppFolder()
 		if err != nil {
 			panic(err)
 		}
@@ -29,7 +29,7 @@ func FindConfigPath() string {
 	return ""
 }
 
-func getCurrentPath() (string, error) {
+func GetAppFolder() (string, error) {
 	file, err := exec.LookPath(os.Args[0])
 	if err != nil {
 		return "", err
