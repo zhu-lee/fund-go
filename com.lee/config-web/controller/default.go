@@ -1,15 +1,19 @@
 package controller
 
 import (
+	"com.lee/config-web/model"
 	"com.lee/fund/web"
-	"fmt"
 )
 
 type DefaultController struct {
-	prefix string "aa"
 }
 
 func (c *DefaultController) Index (ctx *web.Context) {
-	fmt.Println("DefaultController-Index")
-	ctx.Response.Write([]byte("hello,index！"))
+	m:= struct {
+		*model.BaseModel
+		Version string //todo
+		Profiles []string //todo
+	}{
+		BaseModel:model.n
+	}
 }

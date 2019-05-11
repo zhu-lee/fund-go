@@ -3,6 +3,7 @@ package web
 import (
 	"com.lee/fund/config"
 	"path/filepath"
+	"time"
 )
 
 type Config struct {
@@ -21,10 +22,6 @@ func NewConfig(settings config.SettingMap) *Config {
 		panic(err)
 	}
 
-	//TODO 设置version
-
-	//TODO 设置日志文件
-
 	cfg := &Config{
 		AppName:        config.GetAppConf().App.AppName,
 		Version:        config.GetAppConf().App.Version,
@@ -35,5 +32,11 @@ func NewConfig(settings config.SettingMap) *Config {
 		ViewFolder:     filepath.Join(folder, "view"),
 	}
 
+	//TODO 设置日志文件
+
+	if cfg.Version == "" {
+		//todo 构建信息的version
+		cfg.Version=time.Now().Format("20190511.152601")
+	}
 	return cfg
 }

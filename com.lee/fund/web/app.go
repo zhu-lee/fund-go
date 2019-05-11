@@ -68,13 +68,16 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		//TODO 如果成功，输出web访问日志到指路径的日志文件
 	}()
 
-	//如是是首页，路由到哪儿
-	if r.URL.Path == "/" {
-		r.URL.Path = "/index"
-	}
 	reqUrl = r.URL
 
+	//默认路由到首页
+	if reqUrl.Path == "/" {
+		reqUrl.Path = "/index"
+	}
+
+	//获取注册路由
 	route := a.route.GetRoute(reqUrl.Path)
+
 	//如果静态页，路由到哪儿
 	if route == nil {
 		a.handleStatic(w, r, reqUrl)
