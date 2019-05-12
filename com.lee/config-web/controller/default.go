@@ -11,9 +11,12 @@ type DefaultController struct {
 func (c *DefaultController) Index (ctx *web.Context) {
 	m:= struct {
 		*model.BaseModel
-		Version string //todo
+		Version  string   //todo
 		Profiles []string //todo
 	}{
-		BaseModel:model.n
+		BaseModel: model.NewBaseModel(ctx),
 	}
+	m.AddCss(ctx, "")
+	m.AddJs(ctx, "")
+
 }

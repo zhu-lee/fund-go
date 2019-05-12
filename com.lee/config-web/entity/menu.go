@@ -1,5 +1,7 @@
 package entity
 
+import "fmt"
+
 type MenuNode struct {
 	ID           string
 	Level        int
@@ -12,9 +14,21 @@ type MenuNode struct {
 	Items        []*MenuNode `json:"items" xml:"item"`
 }
 
+func (n *MenuNode) SetID(k int) {
+	n.ID = fmt.Sprintf("%v.%v", n.Level, n)
+}
+
 type MenuInfo struct {
 	CurrentMenu *MenuNode
 	TopMenus    []*MenuNode
 	LeftMenus   []*MenuNode
 	Breadcrumb  []*MenuNode
+}
+
+func (n *MenuNode) GetTop() *MenuNode {
+	m := n
+	for m.Parent != nil {
+		m = m.Parent
+	}
+	return m
 }

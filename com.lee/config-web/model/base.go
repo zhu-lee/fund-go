@@ -1,6 +1,7 @@
 package model
 
 import (
+	"com.lee/config-web/biz"
 	"com.lee/config-web/entity"
 	"com.lee/fund/web"
 )
@@ -8,18 +9,18 @@ import (
 type BaseModel struct {
 	*web.SM
 	*web.PM
-	entity.MenuInfo
+	*entity.MenuInfo
 }
 
 func NewBaseModel(ctx *web.Context) *BaseModel {
 	bm := BaseModel{
-		SM:web.NewSM(ctx),
-		PM:new(web.PM),
+		SM: web.NewSM(ctx),
+		PM: new(web.PM),
 	}
 
 	bm.AddCss(ctx, "")
-	bm.AddJs(ctx,"")
-	bm.MenuInfo =
+	bm.AddJs(ctx, "")
+	bm.MenuInfo = biz.Menu.GetMenuInfo(ctx.Request.URL.Path)
 
 	return &bm
 }
