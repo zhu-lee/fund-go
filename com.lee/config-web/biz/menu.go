@@ -34,7 +34,7 @@ func (m *menuBiz) GetMenuInfo(url string) (mi *entity.MenuInfo) {
 
 	mi.CurrentMenu = c
 	mi.LeftMenus = c.GetTop().Items
-	mi.Breadcrumb = make([]*entity.MenuNode, c.Level)
+	mi.Breadcrumb = make([]*entity.MenuNode, c.Level)//存放当前menu的到顶层menu
 	for i := c.Level - 1; i >= 0; i-- {
 		mi.Breadcrumb[i] = c
 		if i > 0 {

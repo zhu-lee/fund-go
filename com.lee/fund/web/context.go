@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"fmt"
 	"mime/multipart"
 	"net"
@@ -116,4 +117,15 @@ func (ctx *Context) GetCssUrl(url string) string {
 
 func (ctx *Context) GetJsUrl(url string) string {
 	return url + "?v=" + ctx.App.Config.Version
+}
+
+func (ctx *Context) WriteTemplate(name string, args interface{}) {
+	t := ctx.App.ve.Get(name)
+
+	buf := new(bytes.Buffer)
+	if err := t.Execute(buf, args); err != nil {
+		_, _ = ctx.Response.Write([]byte(err.Error()))
+	} else {
+		_, _ = ctx.Response.Write(buf.Bytes())
+	}
 }

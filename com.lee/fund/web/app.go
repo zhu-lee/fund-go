@@ -21,14 +21,21 @@ type App struct {
 	Config     *Config
 	route      *routeEngine
 	errHandler ErrorHandler
+	ve         *ViewEngine
 }
 
 func NewWebApp() *App {
 	webSetting := config.GetAppConf().Web
+	cfg := NewConfig(webSetting)
+	ve := &ViewEngine{
+		suffix: ".html",
+		dir:    cfg.ViewFolder,
+	}
 	return &App{
+		Config:     cfg,
 		route:      newRoute(),
-		Config:     NewConfig(webSetting),
 		errHandler: errHandler,
+		ve:         ve,
 	}
 }
 

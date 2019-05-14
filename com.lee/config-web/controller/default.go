@@ -2,6 +2,7 @@ package controller
 
 import (
 	"com.lee/config-web/model"
+	"com.lee/config-web/resp"
 	"com.lee/fund/web"
 )
 
@@ -18,5 +19,5 @@ func (c *DefaultController) Index (ctx *web.Context) {
 	}
 	m.AddCss(ctx, "")
 	m.AddJs(ctx, "")
-
+	resp.WritePage(ctx,"pages/index",m)
 }
