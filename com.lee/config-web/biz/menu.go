@@ -48,7 +48,7 @@ func (m *menuBiz) loadMenuConf() {
 	path := filepath.Join(config.FindConfigPath(), "menu.conf")
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Log.Error("failed to read [menu.conf] file：%v", err)
+		log.Log.Error("%v", err)
 		return
 	}
 

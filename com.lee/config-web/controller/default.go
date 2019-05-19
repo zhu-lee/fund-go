@@ -19,5 +19,5 @@ func (c *DefaultController) Index (ctx *web.Context) {
 	}
 	m.AddCss(ctx, "")
 	m.AddJs(ctx, "")
-	resp.WritePage(ctx,"pages/index",m)
+	resp.WritePage(ctx,"default/index",m)
 }

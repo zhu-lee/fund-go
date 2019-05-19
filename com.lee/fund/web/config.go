@@ -28,15 +28,15 @@ func NewConfig(settings config.SettingMap) *Config {
 		HttpAddr:       settings.String("http_addr", ""),
 		HttpPort:       settings.Int("http_port", 80),
 		ResourceFolder: filepath.Join(folder, "resources"),
-		StaticFolder:   filepath.Join(folder, "static"),
-		ViewFolder:     filepath.Join(folder, "view"),
+	}
+	cfg.StaticFolder = filepath.Join(cfg.ResourceFolder, "static")
+	cfg.ViewFolder = filepath.Join(cfg.ResourceFolder, "view")
+	if cfg.Version == "" {
+		//todo 构建信息的version
+		cfg.Version = time.Now().Format("20190511.152601")
 	}
 
 	//TODO 设置日志文件
-
-	if cfg.Version == "" {
-		//todo 构建信息的version
-		cfg.Version=time.Now().Format("20190511.152601")
-	}
+	
 	return cfg
 }
