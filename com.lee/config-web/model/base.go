@@ -6,6 +6,10 @@ import (
 	"com.lee/fund/web"
 )
 
+const (
+	DefaultPageSize = 25
+)
+
 type BaseModel struct {
 	*web.SM
 	*web.PM
