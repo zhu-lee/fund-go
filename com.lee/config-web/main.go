@@ -7,7 +7,8 @@ import (
 
 func main() {
 	app := web.NewWebApp()
-	app.RegisterController("/rpcserver", &controller.RpcServerController{})
 	app.RegisterController("/", &controller.DefaultController{})
+	app.RegisterController("/rpc", &controller.RpcServerController{})
+	app.RegisterController("/task", &controller.TaskController{})
 	app.Start()
 }

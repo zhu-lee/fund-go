@@ -22,8 +22,8 @@ func NewBaseModel(ctx *web.Context) *BaseModel {
 		PM: new(web.PM),
 	}
 
-	bm.AddCss(ctx, "")
-	bm.AddJs(ctx, "")
+	//bm.AddCss(ctx, "")
+	//bm.AddJs(ctx, "")
 	bm.MenuInfo = biz.Menu.GetMenuInfo(ctx.Request.URL.Path)
 
 	return &bm

@@ -2,58 +2,30 @@
     <section class="sidebar">
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-server"></i> <span>服务</span>
-                    <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="/rpcserver/list"><i class="fa fa-circle-o"></i> 服务程序列表</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-                </ul>
-            </li>
-
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-tasks"></i> <span>任务</span>
-                    <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> 任务列表</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> 执行日志</a></li>
-                </ul>
-            </li>
-
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-comment-o"></i> <span>消息</span>
-                    <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> 消息主题</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> 发送消息</a></li>
-                </ul>
-            </li>
-
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-database"></i> <span>数据库</span>
-                    <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> #</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> #</a></li>
-                </ul>
-            </li>
-
+            {{$breadcrumb := .Breadcrumb}}
+            {{range $l := .LeftMenus}}
+                {{if eq (len .VisibleItems) 0}}
+                    <li {{ range $b := $breadcrumb}}{{if (eq $l.ID $b.ID) }} class="active" {{end}}{{end}}>
+                        <a href="{{.Url}}">
+                            <i class="fa {{.Icon}}"></i><span>{{.Name}}</span>
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="treeview {{ range $b := $breadcrumb}}{{if (eq $l.ID $b.ID) }} active {{end}}{{end}}">
+                        <a href="{{.Url}}">
+                            <i class="fa {{.Icon}}"></i> <span>{{.Name}}</span>
+                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        </a>
+                        <ul class="treeview-menu">
+                            {{range $v := .VisibleItems}}
+                                <li {{ range $b := $breadcrumb}}{{if (eq $v.ID $b.ID) }} class="active" {{end}}{{end}}>
+                                    <a href="{{.Url}}"><i class="fa fa-circle-o"></i> {{.Name}}</a>
+                                </li>
+                            {{end}}
+                        </ul>
+                    </li>
+                {{end}}
+            {{end}}
         </ul>
         <!-- /.sidebar-menu -->
     </section>

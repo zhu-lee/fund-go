@@ -23,7 +23,7 @@ func (c *RpcServerController) List(ctx *web.Context) {
 		BaseModel: model.NewBaseModel(ctx),
 	}
 
-	m.AddCss(ctx, "")
-	m.AddJs(ctx, "")
+	//m.AddCss(ctx, "")
+	//m.AddJs(ctx, "")
 	resp.WritePage(ctx, "rpcserver/list", m)
 }

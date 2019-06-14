@@ -19,16 +19,7 @@ func (n *MenuNode) SetID(k int) {
 }
 
 type MenuInfo struct {
-	CurrentMenu *MenuNode
-	TopMenus    []*MenuNode
-	LeftMenus   []*MenuNode
-	Breadcrumb  []*MenuNode
-}
-
-func (n *MenuNode) GetTop() *MenuNode {
-	m := n
-	for m.Parent != nil {
-		m = m.Parent
-	}
-	return m
+	Current    *MenuNode
+	LeftMenus  []*MenuNode
+	Breadcrumb []*MenuNode
 }

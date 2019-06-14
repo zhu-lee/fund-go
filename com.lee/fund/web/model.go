@@ -26,12 +26,16 @@ type PM struct {
 
 func (p *PM) AddCss(ctx *Context, css ...string) {
 	for _, c := range css {
-		p.Styles = append(p.Styles, ctx.GetCssUrl(c))
+		if c!= "" {
+			p.Styles = append(p.Styles, ctx.GetCssUrl(c))
+		}
 	}
 }
 
 func (p *PM) AddJs(ctx *Context, js ...string) {
 	for _, j := range js {
-		p.Scripts = append(p.Scripts, ctx.GetJsUrl(j))
+		if j!= "" {
+			p.Scripts = append(p.Scripts, ctx.GetJsUrl(j))
+		}
 	}
 }

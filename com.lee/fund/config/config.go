@@ -26,7 +26,7 @@ func FindConfigPath() string {
 			return ConfDir
 		}
 	}
-	return ""
+	return ConfDir
 }
 
 func GetAppFolder() (string, error) {
