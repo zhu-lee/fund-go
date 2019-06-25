@@ -1,0 +1,41 @@
+{{define "pager"}}
+    {{$p := .}}
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">
+                共 {{.TotalCount}} 条记录
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                <ul class="pagination pagination-sm">
+                    {{if eq .PageIndex 1}}
+                        <li class="disabled"><span>首页</span></li>
+                    {{else}}
+                        <li><a href="{{$p.Url 1}}">首页</a></li>
+                    {{end}}
+                    {{if eq .PageIndex 1}}
+                        <li class="disabled"><span>上页</span></li>
+                    {{else}}
+                        <li><a href="{{$p.Url ($p.Page -1)}}">上页</a></li>
+                    {{end}}
+                    {{range .Pages}}
+                        <li {{if eq . $p.PageIndex}} class="active"{{end}}>
+                            <a href="{{$p.Url .}}">{{.}}</a>
+                        </li>
+                    {{end}}
+                    {{if ge .PageIndex .PageCount}}
+                        <li class="disabled"><span>下页</span></li>
+                    {{else}}
+                        <li><a href="{{$p.Url ($p.Page 1)}}">下页</a></li>
+                    {{end}}
+                    {{if lt .PageIndex .PageCount}}
+                        <li class="paginate_button"><a href="{{$p.Url .PageCount}}">尾页</a></li>
+                    {{else}}
+                        <li><span>尾页</span></li>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+    </div>
+{{end}}

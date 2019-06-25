@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 {{template "header" .}}
-<body class="hold-transition skin-blue sidebar-mini">
+<body {{template "skin" .}}>
 <div class="wrapper">
     {{template "mainheader" .}}
     <aside class="main-sidebar">
@@ -10,44 +10,54 @@
 
     <div class="content-wrapper">
         {{template "breadcrumb" .}}
-        <!-- Main content -->
-        <section class="content">
+
+        <!-- Main content ----------------------------------------------->
+        <section class="content container-fluid">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
-                        </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>名称</th>
-                                    <th>类型</th>
-                                    <th>服务端口</th>
-                                    <th>开发者</th>
-                                    <th>备注</th>
-                                    <th>节点</th>
-                                    <th>连接数</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Trident</td>
-                                    <td>Internet
-                                        Explorer 4.0
-                                    </td>
-                                    <td>Win 95+</td>
-                                    <td> 4</td>
-                                    <td>X</td>
-                                    <td>X</td>
-                                    <td>X</td>
-                                    <td>X</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example1" class="table table-bordered table-striped dataTable">
+                                            <thead>
+                                            <tr>
+                                                <th>名称</th>
+                                                <th>说明</th>
+                                                <th>执行器</th>
+                                                <th>触发器</th>
+                                                <th>状态</th>
+                                                <th>修改人</th>
+                                                <th>修改时间</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {{range .Tasks}}
+                                                <tr>
+                                                    <td>{{.Name}}</td>
+                                                    <td>{{.Note}}</td>
+                                                    <td>{{.Executor.Name}}</td>
+                                                    <td>{{range .Triggers}}
+                                                            <div>{{.Value}}</div>{{end}}</td>
+                                                    <td>X</td>
+                                                    <td>X</td>
+                                                    <td>X</td>
+                                                    <td>
+                                                        <button class="btn btn-primary btn-xs" type="button" title="info">info</button>
+                                                    </td>
+                                                </tr>
+                                            {{end}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.col-sm-12 -->
+                                </div>
+                                <!-- /.row -->
+                                {{template "pager" .}}
+                            </div>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -57,9 +67,8 @@
             </div>
             <!-- /.row -->
         </section>
-        <!-- /.content -->
+        <!-- /.content ----------------------------------------------->
     </div>
-
     {{template "footer" .}}
 </div>
 </body>

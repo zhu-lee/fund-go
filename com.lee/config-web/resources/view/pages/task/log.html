@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 {{template "header" .}}
-<body class="hold-transition skin-blue sidebar-mini">
+<body {{template "skin" .}}>
 <div class="wrapper">
     {{template "mainheader" .}}
     <aside class="main-sidebar">
@@ -11,7 +11,7 @@
     <div class="content-wrapper">
         {{template "breadcrumb" .}}
         <!-- Main content -->
-        <section class="content">
+        <section class="content container-fluid">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">

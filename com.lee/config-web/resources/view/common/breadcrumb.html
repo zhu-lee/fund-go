@@ -1,11 +1,15 @@
 {{define "breadcrumb"}}
     <section class="content-header">
         <h1>
-            <small>{{.Current.Name}}</small>
+            <small>{{if .Current }}{{.Current.Name}}{{end}}</small>
         </h1>
         <ol class="breadcrumb">
             {{range .Breadcrumb}}
-                <li>{{.Name}}</li>
+                {{if (eq .ID $.Current.ID)}}
+                    <li><i class="fa fa-circle-o margin-r-5"></i>{{.Name}}</li>
+                {{else}}
+                    <li><i class="fa {{.Icon}} margin-r-5"></i>{{.Name}}</li>
+                {{end}}
             {{end}}
 
         </ol>

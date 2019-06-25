@@ -6,7 +6,6 @@ import (
 	"com.lee/fund/log"
 	"encoding/xml"
 	"io/ioutil"
-	"path/filepath"
 	"sync"
 )
 
@@ -44,7 +43,7 @@ func (m *menuBiz) GetMenuInfo(url string) (mi *entity.MenuInfo) {
 }
 
 func (m *menuBiz) loadMenuConf() {
-	path := filepath.Join(config.FindConfigPath(), "menu.conf")
+	path := config.GetConfigPath("menu.conf")
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Log.Error("%v", err)
