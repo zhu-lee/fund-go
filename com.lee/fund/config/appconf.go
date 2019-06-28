@@ -54,17 +54,17 @@ func (c *appConf) setAppCof(doc *xml.Document) error {
 	return nil
 }
 
-func newApp(m SettingMap) *App {
+func newApp(settingMap SettingMap) *App {
 	app := &App{}
-	if m != nil {
-		app.AppName = m.String("app_name", "")
-		app.Debug = m.Bool("debug", false)
-		app.Version = m.String("version", "")
-		app.LogPath = m.String("log_path", "")
-		app.LogLevel = m.String("log_level", "debug")
-		app.LogProvider = m.String("log_provider", "console")
-		app.LogFormat = m.String("log_format", "")
-		app.GlobalEnv = m.String("global_env", "")
+	if settingMap != nil {
+		app.AppName = settingMap.String("app_name", "")
+		app.Debug = settingMap.Bool("debug", false)
+		app.Version = settingMap.String("version", "")
+		app.LogPath = settingMap.String("log_path", "")
+		app.LogLevel = settingMap.String("log_level", "debug")
+		app.LogProvider = settingMap.String("log_provider", "console")
+		app.LogFormat = settingMap.String("log_format", "")
+		app.GlobalEnv = settingMap.String("global_env", "")
 	}
 	if app.AppName == "" {
 		app.AppName = filepath.Base(os.Args[0])

@@ -14,31 +14,29 @@ const (
 	ROUTE_ACTION
 )
 
-type RouteItem struct {
-	handler handler
-	Name    string
-}
-
-type routeEngine struct {
-	routes map[string]*RouteItem
-}
-
-type HandlerOption struct {
-	Suffix    string
+type RouterItem struct {
+	handler   handler
+	Name      string
 	Anonymous bool
 }
 
-func newRoute() *routeEngine {
-	return &routeEngine{
-		routes: make(map[string]*RouteItem),
+type routerEngine struct {
+	routes map[string]*RouterItem
+	cfg    *Config
+}
+
+type RouterOption struct {
+	Anonymous bool
+}
+
+func newRoute(cfg *Config) *routerEngine {
+	return &routerEngine{
+		routes: make(map[string]*RouterItem),
+		cfg:    cfg,
 	}
 }
 
-func (r *routeEngine) RegisterController(url string, controller interface{}) {
-	r.RegisterControllerH(url, controller, nil)
-}
-
-func (r *routeEngine) RegisterControllerH(url string, controller interface{}, options map[string]*HandlerOption) {
+func (r *routerEngine) Router(url string, controller interface{}, options ...map[string]*RouterOption) {
 	vt := reflect.Indirect(reflect.ValueOf(controller)).Type()
 	tt := reflect.TypeOf(controller)
 	controllerName := strings.TrimSuffix(vt.Name(), "Controller")
@@ -50,9 +48,9 @@ func (r *routeEngine) RegisterControllerH(url string, controller interface{}, op
 			methodName:     m.Name,
 		}
 
-		var option *HandlerOption
-		if options != nil {
-			option = options[m.Name]
+		var option *RouterOption
+		if len(options) > 0 {
+			option = options[0][m.Name]
 		}
 
 		u := path.Join(url, m.Name)
@@ -60,15 +58,22 @@ func (r *routeEngine) RegisterControllerH(url string, controller interface{}, op
 	}
 }
 
-func (r *routeEngine) registerRoute(rt routeType, name, url string, h handler, option *HandlerOption) {
-	routeItem := &RouteItem{
-		handler:h,
-		Name: name,
-		}
-	r.routes[strings.ToLower(url)]= routeItem
+func (r *routerEngine) registerRoute(rt routeType, name, url string, h handler, option *RouterOption) {
+	item := &RouterItem{
+		handler: h,
+		Name:    name,
+	}
+
+	if option == nil {
+		item.Anonymous = r.cfg.Anonymous
+	} else {
+		item.Anonymous = option.Anonymous
+	}
+
+	r.routes[strings.ToLower(url)] = item
 }
 
-func (r *routeEngine) GetRoute(urlPath string) *RouteItem {
+func (r *routerEngine) GetRouter(urlPath string) *RouterItem {
 	urlPath = strings.ToLower(urlPath)
 	if r, ok := r.routes[urlPath]; ok {
 		return r

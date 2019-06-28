@@ -7,8 +7,10 @@ import (
 
 func main() {
 	app := web.NewWebApp()
-	app.RegisterController("/", &controller.DefaultController{})
-	app.RegisterController("/rpc", &controller.RpcServerController{})
-	app.RegisterController("/task", &controller.TaskController{})
+	app.SetAuth()
+
+	app.Router("/", &controller.DefaultController{}, map[string]*web.RouterOption{"SignIn": {Anonymous: true}})
+	app.Router("/rpc", &controller.RpcServerController{})
+	app.Router("/task", &controller.TaskController{})
 	app.Start()
 }

@@ -16,6 +16,7 @@ type Context struct {
 	Response   http.ResponseWriter
 	Url        *url.URL
 	parameters url.Values
+	User       User
 	App        *App
 	data       map[interface{}]interface{}
 }
@@ -128,4 +129,16 @@ func (ctx *Context) WriteTemplate(name string, args interface{}) {
 	} else {
 		_, _ = ctx.Response.Write(buf.Bytes())
 	}
+}
+
+// Redirect 跳转到指定地址，如果permanant为true，则使用301跳转
+func (ctx *Context) Redirect(url string, permanent bool) {
+	var statusCode int
+	if permanent {
+		statusCode = http.StatusMovedPermanently
+	} else {
+		statusCode = http.StatusFound
+	}
+	ctx.Response.Header().Set("location", url)
+	ctx.Response.WriteHeader(statusCode)
 }

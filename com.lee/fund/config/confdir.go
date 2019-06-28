@@ -74,5 +74,5 @@ func Filter(filePath string) (string, error) {
 		return "", err
 	}
 
-	return getProfileConfig().filter(string(bytes)), nil
+	return getProfileConf().filter(string(bytes)), nil
 }

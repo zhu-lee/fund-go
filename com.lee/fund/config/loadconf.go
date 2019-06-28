@@ -13,45 +13,43 @@ const (
 	ActiveProfileEnv = "FUND_PROFILE_ACTIVE"
 )
 
-//初始化load
-var ld = newLoad()
+var ldc = newLoadConf()
 
-type load struct {
-	once    sync.Once
-	appConf *appConf
-	profile *profileConfig
+type loadConf struct {
+	once        sync.Once
+	appConf     *appConf
+	profileConf *profileConf
 }
 
-func newLoad() *load {
-	return &load{
-		appConf: new(appConf),
-		profile: new(profileConfig),
+func newLoadConf() *loadConf {
+	return &loadConf{
+		appConf:     new(appConf),
+		profileConf: new(profileConf),
 	}
 }
 
 func GetAppConf() *appConf {
-	ld.once.Do(ld.init)
-	return ld.appConf
+	ldc.once.Do(ldc.init)
+	return ldc.appConf
 }
 
-func getProfileConfig() *profileConfig {
-	ld.once.Do(ld.init)
-	return ld.profile
+func getProfileConf() *profileConf {
+	ldc.once.Do(ldc.init)
+	return ldc.profileConf
 }
 
-func (m *load) init() {
-	m.loadProfile()
-	m.loadAppConf()
+func (ld *loadConf) init() {
+	ld.loadProfile()
+	ld.loadAppConf()
 }
 
-//加载profile.conf配置文件
-func (m *load) loadProfile() {
+func (ld *loadConf) loadProfile() {
 	activeProfiles := *app.GetProfileFlag()
 	if activeProfiles == "" {
 		activeProfiles = os.Getenv(ActiveProfileEnv)
 	}
 	if activeProfiles != "" {
-		m.profile.active = strings.Split(activeProfiles, ",")
+		ld.profileConf.active = strings.Split(activeProfiles, ",")
 	}
 	fmt.Println("config > activeProfile：", activeProfiles)
 
@@ -63,31 +61,30 @@ func (m *load) loadProfile() {
 
 	fmt.Printf("load profile.conf：%s\n", path)
 
-	content := m.readFile(path)
-	err := m.profile.load(content)
+	content := ld.readFile(path)
+	err := ld.profileConf.load(content)
 	if err != nil {
 		panic(err)
 	}
 }
 
-//加载app.conf配置文件
-func (m *load) loadAppConf() {
+func (ld *loadConf) loadAppConf() {
 	path := GetConfigPath("app.conf")
 	if path == "" {
 		fmt.Println("can't find app.conf")
-		m.appConf.init()
+		ld.appConf.init()
 		return
 	}
 
 	doc, err := loadXML(path)
-	err = m.appConf.setAppCof(doc)
+	err = ld.appConf.setAppCof(doc)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("load app.conf：%s\n", path)
 }
 
-func (m *load) readFile(path string) [] byte {
+func (ld *loadConf) readFile(path string) [] byte {
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(fmt.Errorf("read [%s] failed：%v", path, err))

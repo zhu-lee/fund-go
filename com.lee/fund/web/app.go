@@ -19,7 +19,8 @@ const (
 
 type App struct {
 	Config     *Config
-	route      *routeEngine
+	auth       Auth
+	route      *routerEngine
 	errHandler ErrorHandler
 	ve         *ViewEngine
 }
@@ -27,20 +28,28 @@ type App struct {
 func NewWebApp() *App {
 	webSetting := config.GetAppConf().Web
 	cfg := NewConfig(webSetting)
-	ve := &ViewEngine{
+	viewEngine := &ViewEngine{
 		suffix: ".html",
 		dir:    cfg.ViewFolder,
 	}
 	return &App{
 		Config:     cfg,
-		route:      newRoute(),
+		route:      newRoute(cfg),
 		errHandler: errHandler,
-		ve:         ve,
+		ve:         viewEngine,
 	}
 }
 
-func (a *App) RegisterController(url string, controller interface{}) {
-	a.route.RegisterController(url, controller)
+func (a *App) SetAuth() {
+	auth, err := newCookieAuth(a.Config)
+	if err != nil {
+		panic(err)
+	}
+	a.auth = auth
+}
+
+func (a *App) Router(url string, controller interface{}, options ...map[string]*RouterOption) {
+	a.route.Router(url, controller, options...)
 }
 
 func (a *App) Start() {
@@ -83,7 +92,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//获取注册路由
-	route := a.route.GetRoute(reqUrl.Path)
+	route := a.route.GetRouter(reqUrl.Path)
 
 	//如果静态页，路由到哪儿
 	if route == nil {
@@ -139,10 +148,28 @@ func (a *App) newContext(w http.ResponseWriter, r *http.Request, url *url.URL) *
 	}
 }
 
-func (a *App) handleRoute(ctx *Context, w http.ResponseWriter, r *http.Request, route *RouteItem) {
-	//TODO 设置权限
+func (a *App) handleRoute(ctx *Context, w http.ResponseWriter, r *http.Request, route *RouterItem) {
+	if a.auth != nil {
+		ctx.User = a.auth.CookieUser(ctx)
+	}
 
-	//TODO 过滤请求
+	//check auth
+	if !route.Anonymous {
+		if ctx.User == nil || ctx.User.Anonymous() {
+			if _, ok := r.Header["X-Requested-With"]; ok {
+				http.Error(w, "你没有登录", http.StatusUnauthorized)
+			} else {
+				u, _ := url.Parse(a.Config.UrlSignIn)
+				q := u.Query()
+				//q.Set("from", r.RequestURI)
+				u.RawQuery = q.Encode()
+				ctx.Redirect(u.String(), false)
+			}
+			return
+		}
+	}
+
+	//check filter
 
 	route.handler.Process(ctx)
 }
